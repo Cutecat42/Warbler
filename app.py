@@ -215,7 +215,33 @@ def stop_following(follow_id):
 def profile():
     """Update profile for current user."""
 
-    # IMPLEMENT THIS
+    form = UserAddForm()
+
+    if form.validate_on_submit():
+        user = User.authenticate(form.username.data,
+                                 form.password.data)
+
+        if user:
+            u = User.query.filter_by(username=form.username.data).first() 
+            try:
+                u.username = form.username.data
+                u.email = form.email.data
+                u.image_url = form.image_url.data or u.image_url
+                db.session.commit()
+                flash(f"{user.username} updated!", "success")
+                return redirect(f"/users/${u.id}")
+
+            except:
+                flash("Username already taken", 'danger')
+                return redirect('users/profile')
+        else:
+            flash("Incorrect password", 'danger')
+            return redirect('users/profile')
+
+    else:
+        user = g.user.id
+        print(user)
+        return render_template('users/edit.html', form=form,user=user)
 
 
 @app.route('/users/delete', methods=["POST"])

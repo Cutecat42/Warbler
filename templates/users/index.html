@@ -36,7 +36,13 @@
                     {% endif %}
 
                   </div>
-                  <p class="card-bio">BIO HERE</p>
+                  <p class="card-bio">
+                    <p class="card-bio">
+                      {% if user.bio %}
+                      {{user.bio}}</p>
+                      {% else %}
+                      This person has no bio :(</p>
+                      {% endif %}
                 </div>
               </div>
             </div>
